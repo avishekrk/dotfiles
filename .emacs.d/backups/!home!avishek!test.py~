@@ -1,0 +1,26 @@
+from __future__ import print_function
+import numpy as np
+
+
+class PowTow():
+
+    def __init__(self, max=10):
+        self.current = 0
+        self.max = max
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.current > self.max:
+            raise StopIteration
+        else:
+            self.current += 1
+            return (self.current - 1)**2
+
+
+a = np.array(range(1, 10))
+
+p = PowTow()
+for i in p:
+    print(i)
