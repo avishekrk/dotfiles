@@ -1,0 +1,8 @@
+*.pyc
+*.debug
+*.pdb
+*.csv
+*.png
+*.out
+*~
+*.ipynb*
