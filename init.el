@@ -17,7 +17,6 @@
     ein
     elpy
     flycheck
-    neotree
     material-theme
     py-autopep8
     markdown-mode))
@@ -55,7 +54,9 @@
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
-;; delete trailing whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(global-set-key (kbd "C-n") 'neotree)
+
 
 ;; init.el ends here
