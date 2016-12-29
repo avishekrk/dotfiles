@@ -7,8 +7,8 @@
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="alanpeabody"
-
+ZSH_THEME="spaceship"
+DEFAULT_USER="avishek"
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -51,7 +51,9 @@ ZSH_THEME="alanpeabody"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git pip pep8 python web-search, tmux)
+
+ZSH_TMUX_AUTOSTART=true
 
 source $ZSH/oh-my-zsh.sh
 
@@ -83,4 +85,14 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source ~/.aliases
+alias e='emacs -nw'
+alias ec='emacsclient -t'
+alias dsapp='ssh akumar@dsapp.dssg.io'
+alias green='ssh avishek@gw.cusp.nyu.edu'
+
+
+function dsapp_pw(){
+    ssh akumar@dsapp.dssg.io -L 44444:localhost:44444
+    }
+
+export TERM=xterm-256color
