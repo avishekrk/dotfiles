@@ -42,6 +42,14 @@
 ;; PYTHON CONFIGURATION
 ;; --------------------------------------
 
+(setq-default indent-tabs-mode nil)
+(setq tab-stop-list (number-sequence 4 120 4))
+
+
+(add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
+(add-hook 'python-mode-hook (lambda ()
+                                 (guess-style-guess-tab-width)))
+
 (elpy-enable)
 (elpy-use-ipython)
 
