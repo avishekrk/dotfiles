@@ -19,7 +19,9 @@
     flycheck
     material-theme
     py-autopep8
-    markdown-mode))
+    markdown-mode
+    origami
+    neotree))
 
 (mapc #'(lambda (package)
     (unless (package-installed-p package)
@@ -46,9 +48,15 @@
 (setq tab-stop-list (number-sequence 4 120 4))
 
 
-(add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
-(add-hook 'python-mode-hook (lambda ()
-                                 (guess-style-guess-tab-width)))
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq-default indent-tabs-mode nil)
+            (setq-default tab-width 4)
+                    (setq-default python-indent 4)))
+
+;;(add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
+;;(add-hook 'python-mode-hook (lambda ()
+;;                                 (guess-style-guess-tab-width)))
 
 (elpy-enable)
 (elpy-use-ipython)
@@ -65,6 +73,12 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (global-set-key (kbd "C-n") 'neotree)
+
+;; code folding
+(require 'origami)
+(global-origami-mode)
+
+(global-set-key (kbd "C-f") 'origami-recursively-toggle-node)
 
 
 ;; init.el ends here
