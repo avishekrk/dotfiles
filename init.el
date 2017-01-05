@@ -21,7 +21,8 @@
     py-autopep8
     markdown-mode
     origami
-    neotree))
+    neotree
+    yaml-mode))
 
 (mapc #'(lambda (package)
     (unless (package-installed-p package)
