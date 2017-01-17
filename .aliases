@@ -1,2 +1,3 @@
 alias e='emacs -nw'
 alias ec="emacsclient -a '' -c -t"
+alias k9="kill -9"
