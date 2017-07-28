@@ -4,3 +4,4 @@ importmagic
 autopep8
 yapf
 flake8
+format-sql
