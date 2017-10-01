@@ -38,6 +38,9 @@
 
 ;; BASIC CUSTOMIZATION
 ;; --------------------------------------
+(global-hl-line-mode 1)
+(set-face-background 'hl-line "#3e4446")
+(set-face-foreground 'highlight nil)
 
 (setq inhibit-startup-message t) ;; hide the startup message
 (load-theme 'badwolf t)
