@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "py-autopep8" "py-autopep8.el" (22576 55749
-;;;;;;  387525 358000))
+;;;### (autoloads nil "py-autopep8" "py-autopep8.el" (23000 59040
+;;;;;;  241862 873000))
 ;;; Generated autoloads from py-autopep8.el
 
 (autoload 'py-autopep8 "py-autopep8" "\
