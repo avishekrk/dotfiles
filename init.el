@@ -8,9 +8,11 @@
 (setq prelude-whitespace nil)
 
 (require 'package)
+(require 'use-package)
+
 
 (add-to-list 'package-archives
-       '("melpa" . "http://melpa.org/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
 (when (not package-archive-contents)
@@ -18,8 +20,9 @@
 
 (defvar myPackages
   '(better-defaults
-    ein
     elpy
+    ein
+    ivy
     flycheck
     material-theme
     py-autopep8
@@ -33,63 +36,18 @@
     format-sql
     rst
     magit
-    dired-icon))
+    buffer-move))
 
 (mapc #'(lambda (package)
-    (unless (package-installed-p package)
-      (package-install package)))
+          (unless (package-installed-p package)
+            (package-install package)))
       myPackages)
 
 ;; BASIC CUSTOMIZATION
 ;; --------------------------------------
-;;(global-hl-line-mode 1)
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
-
-
-(setq x-select-enable-primary nil)
-(setq x-select-enable-clipboard t)
-
-
-(when (fboundp 'set-charset-priority)
-  (set-charset-priority 'unicode))
-(prefer-coding-system 'utf-8)
-(set-language-environment    'utf-8)
-(setq locale-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-(set-selection-coding-system 'utf-8)
-(setq-default buffer-file-coding-system 'utf-8)
-(set-input-method nil)
-
-
-(use-package fill-column-indicator
-  :ensure t
-  :config
-  (setq fci-rule-column 80)
-  (add-hook 'prog-mode-hook 'fci-mode))
-
-(setq
- ad-redefinition-action 'accept                   ; Silence warnings for redefinition
- cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
- display-time-default-load-average nil            ; Don't display load average
- fill-column 80                                   ; Set width for automatic line breaks
- help-window-select t                             ; Focus new help windows when opened
- inhibit-startup-screen t                         ; Disable start-up screen
- initial-scratch-message ""                       ; No me gusta que el =scratch buffer= contenga texto
- inhibit-startup-message t
- load-prefer-newer t                              ; Prefers the newest version of a file
- scroll-conservatively most-positive-fixnum       ; Always scroll by one line
- select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
- tab-width 4                                      ; Set width for tabs
- use-package-always-ensure t                      ; Avoid the :ensure keyword for each package
- ring-bell-function 'ignore
- vc-follow-symlinks t)                            ; Always follow the symlinks
-(cd "~/")                                         ; Move to the user directory
-(defalias 'yes-or-no-p 'y-or-n-p)                 ; No me gusta que tenga que escribir =yes/no=, prefiero =y/n=
-(show-paren-mode 1)            
+;;(global-hl-line-mode 1)
 
 ;;(set-face-background 'hl-line "#3e4446")
 ;;(set-face-foreground 'highlight nil)
@@ -98,12 +56,8 @@
 (load-theme 'badwolf t)
 ;;(load-theme 'soothe t) ;; load material theme
 ;;(load-theme 'material t) ;; load material theme
+;;(global-linum-mode t) ;; enable line numbers globally
 
-
-
-
-;; NAVIGATION
-;; -----------------------------------------------------
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
@@ -149,43 +103,18 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-set-key (kbd "C-d") 'neotree)
 
+;; code folding
+(require 'origami)
+(global-origami-mode)
+(global-set-key (kbd "C-f") 'origami-recursively-toggle-node)
 
 (require 'rst)
 
-;; LaTeX configuration
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
 
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-(setq TeX-PDF-mode t)
-
-(setq TeX-output-view-style
-    (quote
-     (("^pdf$" "." "evince -f %o")
-      ("^html?$" "." "iceweasel %o"))))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(setq use-package-always-ensure t)
 
 (setq prelude-guru nil)
 
 
-(use-package all-the-icons
-  :config
-  (use-package all-the-icons-dired
-    :config
-    (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-    )
-  )
 
 (use-package pretty-mode
   :ensure t
@@ -378,8 +307,48 @@
   :ensure t
   :after counsel
   :config
-  (counsel-projectile-on)
+  ;;(counsel-projectile-on)
   )
 
+;; copy to the clipboard
+
+(setq x-select-enable-clipboard t)
+
+;; move buffers around
+(use-package buffer-move
+  :ensure t
+  :bind (("C-c w <up>"    . buf-move-up)
+         ("C-c w <down>"  . buf-move-down)
+         ("C-c w <left>"  . buf-move-left)
+         ("C-c w <right>" . buf-move-right)))
+
+
+(use-package neotree
+  :init
+  (require 'neotree)
+  :config
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-smart-open t)
+  )
+(provide 'init-neotree)
+
+(setq neo-theme 'icons)
+
+(use-package find-file-in-project)
+
+(global-set-key [f8] 'neotree-toggle)
+
+(global-set-key (kbd "C-c q") (lambda ()
+                                (interactive)
+                                (other-window -1)))
+
+(use-package all-the-icons)
+
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode))
 
 ;; init.el ends here
