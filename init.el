@@ -351,4 +351,9 @@
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
+(use-package all-the-icons-ivy
+  :ensure t
+  :config
+  (all-the-icons-ivy-setup))
+
 ;; init.el ends here
