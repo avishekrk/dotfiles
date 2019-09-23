@@ -8,11 +8,9 @@
 (setq prelude-whitespace nil)
 
 (require 'package)
-(require 'use-package)
-
 
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+       '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
 (when (not package-archive-contents)
@@ -20,9 +18,8 @@
 
 (defvar myPackages
   '(better-defaults
-    elpy
     ein
-    ivy
+    elpy
     flycheck
     material-theme
     py-autopep8
@@ -36,27 +33,29 @@
     format-sql
     rst
     magit
-    buffer-move))
+    dired-icon
+    unicode-fonts
+    all-the-icons-dired
+    doom-modeline
+    json-mode))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
             (package-install package)))
       myPackages)
 
+
+(require 'unicode-fonts)
+(unicode-fonts-setup)
+
+
 ;; BASIC CUSTOMIZATION
 ;; --------------------------------------
-(when (version<= "26.0.50" emacs-version )
-  (global-display-line-numbers-mode))
-;;(global-hl-line-mode 1)
-
-;;(set-face-background 'hl-line "#3e4446")
-;;(set-face-foreground 'highlight nil)
-
 (setq inhibit-startup-message t) ;; hide the startup message
 (load-theme 'badwolf t)
-;;(load-theme 'soothe t) ;; load material theme
-;;(load-theme 'material t) ;; load material theme
-;;(global-linum-mode t) ;; enable line numbers globally
+(global-display-line-numbers-mode 1) ;; enable line numbers globally
+
+
 
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
@@ -88,6 +87,8 @@
 
 (elpy-enable)
 
+(setq python-shell-interpreter "ipython3" python-shell-interpreter-args "--simple-prompt --pprint")
+:+1: 2
 
 
 
@@ -102,19 +103,46 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-set-key (kbd "C-d") 'neotree)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
-;; code folding
-(require 'origami)
-(global-origami-mode)
-(global-set-key (kbd "C-f") 'origami-recursively-toggle-node)
+
 
 (require 'rst)
 
+;; LaTeX configuration
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
 
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
+
+(setq TeX-output-view-style
+    (quote
+     (("^pdf$" "." "evince -f %o")
+      ("^html?$" "." "iceweasel %o"))))
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(setq use-package-always-ensure t)
 
 (setq prelude-guru nil)
 
 
+(use-package all-the-icons
+  :config
+  (use-package all-the-icons-dired
+    :config
+    (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+    )
+  )
 
 (use-package pretty-mode
   :ensure t
@@ -250,7 +278,7 @@
   (ivy-set-actions
    t
    '(("i" (lambda (x) (with-ivy-window
-                        (insert x))) "insert candidate")
+                   (insert x))) "insert candidate")
      (" " (lambda (x) (ivy-resume)) "resume")
      ("?" (lambda (x)
             (interactive)
@@ -307,45 +335,13 @@
   :ensure t
   :after counsel
   :config
-  ;;(counsel-projectile-on)
+  ;;  (counsel-projectile-on)
   )
 
-;; copy to the clipboard
-
-(setq x-select-enable-clipboard t)
-
-;; move buffers around
-(use-package buffer-move
-  :ensure t
-  :bind (("C-c w <up>"    . buf-move-up)
-         ("C-c w <down>"  . buf-move-down)
-         ("C-c w <left>"  . buf-move-left)
-         ("C-c w <right>" . buf-move-right)))
-
-
-(use-package neotree
-  :init
-  (require 'neotree)
-  :config
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (setq neo-smart-open t)
-  )
-(provide 'init-neotree)
-
-(setq neo-theme 'icons)
-
-(use-package find-file-in-project)
-
-(global-set-key [f8] 'neotree-toggle)
-
-(global-set-key (kbd "C-c q") (lambda ()
-                                (interactive)
-                                (other-window -1)))
-
-(use-package all-the-icons)
 
 (require 'doom-modeline)
 (doom-modeline-mode 1)
+
 
 (use-package doom-modeline
   :ensure t
@@ -356,4 +352,34 @@
   :config
   (all-the-icons-ivy-setup))
 
-;; init.el ends here
+(setq mac-shift-modifier 'meta)
+;;(customize-set-variable 'mac-command-modifier 'meta)
+;;(customize-set-variable 'mac-option-modifier 'alt)
+;;(customize-set-variable 'mac-right-option-modifier 'super)
+
+(use-package bicycle
+  :after outline
+  :bind (:map outline-minor-mode-map
+              ([C-tab] . bicycle-cycle)
+              ([S-tab] . bicycle-cycle-global)))
+
+(use-package prog-mode
+  :ensure nil
+  :config
+  (add-hook 'prog-mode-hook 'outline-minor-mode)
+  (add-hook 'prog-mode-hook 'hs-minor-mode))
+
+
+(use-package centaur-tabs
+  :demand
+  :config
+  (centaur-tabs-mode t)
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
+
+(custom-set-variables
+ '(conda-anaconda-home "/Users/akumar67/miniconda3/"))
+
+
+;; Init.el ends here
