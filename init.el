@@ -378,6 +378,8 @@
   ("C-<prior>" . centaur-tabs-backward)
   ("C-<next>" . centaur-tabs-forward))
 
+(setq initial-scratch-message "")
+
 (custom-set-variables
  '(conda-anaconda-home "/Users/akumar67/miniconda3/"))
 
