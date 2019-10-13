@@ -347,6 +347,8 @@
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
+
+
 (use-package all-the-icons-ivy
   :ensure t
   :config
@@ -370,13 +372,46 @@
   (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 
+;;(use-package centaur-tabs
+;;  :demand
+;;  :config
+;; (centaur-tabs-mode t)
+;;  :bind
+;;  ("C-<prior>" . centaur-tabs-backward)
+;;  ("C-<next>" . centaur-tabs-forward))
+
 (use-package centaur-tabs
   :demand
   :config
+  (setq centaur-tabs-style "bar")
+  (setq centaur-tabs-height 30)
+  (setq centaur-tabs-modified-marker "●")
+  (setq centaur-tabs-set-icons t)
+  (setq centaur-tabs-set-bar 'over)
+  (setq centaur-tabs-set-modified-marker t)
+  (centaur-tabs-headline-match)
   (centaur-tabs-mode t)
   :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
+  ("M-w" . centaur-tabs-backward)
+  ("M-s" . centaur-tabs-forward))
+
+(add-to-list 'same-window-buffer-names "*SQL*")
+
+(setq sql-postgres-login-params
+      '((user :default "postgres")
+        (database :default "postgres")
+        (server :default "localhost")
+        (port :default 5432)))
+
+(add-hook 'sql-interactive-mode-hook
+          (lambda ()
+            (setq sql-prompt-regexp "^[_[:alpha:]]*[=][#>] ")
+            (setq sql-prompt-cont-regexp "^[_[:alpha:]]*[-][#>] ")
+            (toggle-truncate-lines t)))
+
+(use-package sql-indent
+  :after (:any sql sql-interactive-mode)
+  :delight sql-mode "Σ " )
 
 (setq initial-scratch-message "")
 
