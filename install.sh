@@ -17,6 +17,6 @@ then
     cp -v init.el ${EMACS_DIR}
 else
     echo "Neither ${PRELUDE_DIR} or #{EMACS_DIR} exists making ${EMACS_DIR}"
-    #mkdir -vp ${EMACS_DIR}
+    mkdir -vp ${EMACS_DIR}
     cp -v init.el ${EMACS_DIR}
 fi
