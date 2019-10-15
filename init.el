@@ -372,14 +372,6 @@
   (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 
-;;(use-package centaur-tabs
-;;  :demand
-;;  :config
-;; (centaur-tabs-mode t)
-;;  :bind
-;;  ("C-<prior>" . centaur-tabs-backward)
-;;  ("C-<next>" . centaur-tabs-forward))
-
 (use-package centaur-tabs
   :demand
   :config
@@ -392,8 +384,8 @@
   (centaur-tabs-headline-match)
   (centaur-tabs-mode t)
   :bind
-  ("M-w" . centaur-tabs-backward)
-  ("M-s" . centaur-tabs-forward))
+  ("M-q" . centaur-tabs-backward)
+  ("M-a" . centaur-tabs-forward))
 
 (add-to-list 'same-window-buffer-names "*SQL*")
 
