@@ -86,6 +86,8 @@
 
 
 (elpy-enable)
+(setq elpy-rpc-python-command "python3")
+(setq elpy-rpc-backend "jedi")
 
 (setq python-shell-interpreter "ipython3" python-shell-interpreter-args "--simple-prompt --pprint")
 :+1: 2
@@ -408,7 +410,20 @@
 (setq initial-scratch-message "")
 
 (custom-set-variables
- '(conda-anaconda-home "/Users/akumar67/miniconda3/"))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(conda-anaconda-home "/Users/akumar67/miniconda3/")
+ '(package-selected-packages
+   (quote
+    (sql-indent centaur-tabs bicycle all-the-icons-ivy counsel-projectile ivy-hydra try counsel multiple-cursors aggressive-indent avy pretty-mode use-package yaml-mode unicode-fonts soothe-theme py-autopep8 origami neotree material-theme magit json-mode format-sql flycheck elpy ein doom-modeline dired-icon better-defaults bash-completion badwolf-theme all-the-icons-dired))))
 
 
 ;; Init.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
