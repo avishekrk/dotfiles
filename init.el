@@ -37,7 +37,9 @@
     unicode-fonts
     all-the-icons-dired
     doom-modeline
-    json-mode))
+    json-mode
+    anaconda-mode
+    company))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
@@ -45,18 +47,25 @@
       myPackages)
 
 
+
 (require 'unicode-fonts)
 (unicode-fonts-setup)
 
 
 ;; BASIC CUSTOMIZATION
-;; --------------------------------------
+;; --------------------------------------------------
 (setq inhibit-startup-message t) ;; hide the startup message
 (load-theme 'badwolf t)
 (global-display-line-numbers-mode 1) ;; enable line numbers globally
+(setq initial-scratch-message "")
+(setq-default indent-tabs-mode nil)
+(setq tab-width 4)
+(setq-default tab-always-indent 'complete)
 
 
 
+;; WINDOW MANAGEMENT
+;; --------------------------------------------------
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
@@ -69,30 +78,48 @@
   "bash-completion"
   "BASH completion hook")
 (add-hook 'shell-dynamic-complete-functions
-            'bash-completion-dynamic-complete)
+          'bash-completion-dynamic-complete)
 
 ;; PYTHON CONFIGURATION
 ;; --------------------------------------
+(use-package python
+  :mode ("\\.py\\'" . python-mode)
+  ("\\.wsgi$" . python-mode)
+  :interpreter ("python" . python-mode)
 
-(setq-default indent-tabs-mode nil)
-(setq tab-stop-list (number-sequence 4 120 4))
+  :init
+  (setq-default indent-tabs-mode nil)
 
-
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq-default indent-tabs-mode nil)
-            (setq-default tab-width 4)
-                    (setq-default python-indent 4)))
-
+  :config
+  (setq python-indent-offset 4)
+  (add-hook 'python-mode-hook 'smartparens-mode)
+  (add-hook 'python-mode-hook 'color-identifiers-mode))
 
 (elpy-enable)
 (setq elpy-rpc-python-command "python3")
 (setq elpy-rpc-backend "jedi")
 
-(setq python-shell-interpreter "ipython3" python-shell-interpreter-args "--simple-prompt --pprint")
-:+1: 2
+(use-package jedi
+  :ensure t
+  :init
+  (add-to-list 'company-backends 'company-jedi)
+  :config
+  (use-package company-jedi
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi)))
+    (setq company-jedi-python-bin "python")))
 
 
+(use-package anaconda-mode
+  :ensure t
+  :init (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  :config (use-package company-anaconda
+            :ensure t
+            :init (add-hook 'python-mode-hook 'anaconda-mode)
+            (eval-after-load "company"
+              '(add-to-list 'company-backends '(company-anaconda :with company-capf)))))
 
 ;; use flycheck not flymake with elpy
 (when (require 'flycheck nil t)
@@ -102,16 +129,20 @@
 ;; enable autopep8 formatting on save
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; NEOTREE
+;; ------------------------------------------------------
 (global-set-key (kbd "C-d") 'neotree)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
 
-
+;; RST
+;; ------------------------------------------------------
 (require 'rst)
 
 ;; LaTeX configuration
+;; ------------------------------------------------------
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
@@ -135,8 +166,9 @@
   (package-install 'use-package))
 (setq use-package-always-ensure t)
 
-(setq prelude-guru nil)
 
+;; MISC STUFF
+;; ------------------------------------------------------
 
 (use-package all-the-icons
   :config
@@ -402,25 +434,14 @@
             (setq sql-prompt-regexp "^[_[:alpha:]]*[=][#>] ")
             (setq sql-prompt-cont-regexp "^[_[:alpha:]]*[-][#>] ")
             (toggle-truncate-lines t)))
-
-(use-package sql-indent
-  :after (:any sql sql-interactive-mode)
-  :delight sql-mode "Σ " )
-
-(setq initial-scratch-message "")
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(conda-anaconda-home "/Users/akumar67/miniconda3/")
  '(package-selected-packages
    (quote
-    (sql-indent centaur-tabs bicycle all-the-icons-ivy counsel-projectile ivy-hydra try counsel multiple-cursors aggressive-indent avy pretty-mode use-package yaml-mode unicode-fonts soothe-theme py-autopep8 origami neotree material-theme magit json-mode format-sql flycheck elpy ein doom-modeline dired-icon better-defaults bash-completion badwolf-theme all-the-icons-dired))))
-
-
-;; Init.el ends here
+    (company-anaconda company-jedi jedi yaml-mode use-package unicode-fonts try soothe-theme py-autopep8 pretty-mode origami neotree multiple-cursors material-theme magit json-mode ivy-hydra format-sql flycheck elpy ein doom-modeline dired-icon counsel-projectile centaur-tabs bicycle better-defaults bash-completion badwolf-theme avy anaconda-mode all-the-icons-ivy all-the-icons-dired aggressive-indent))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
