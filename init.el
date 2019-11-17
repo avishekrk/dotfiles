@@ -39,7 +39,9 @@
     doom-modeline
     json-mode
     anaconda-mode
-    company))
+    company
+    color-identifiers-mode
+    smartparens))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
@@ -61,7 +63,7 @@
 (setq-default indent-tabs-mode nil)
 (setq tab-width 4)
 (setq-default tab-always-indent 'complete)
-
+(require 'smartparens-config)
 
 
 ;; WINDOW MANAGEMENT
@@ -82,6 +84,7 @@
 
 ;; PYTHON CONFIGURATION
 ;; --------------------------------------
+
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   ("\\.wsgi$" . python-mode)
@@ -89,7 +92,6 @@
 
   :init
   (setq-default indent-tabs-mode nil)
-
   :config
   (setq python-indent-offset 4)
   (add-hook 'python-mode-hook 'smartparens-mode)
@@ -98,6 +100,10 @@
 (elpy-enable)
 (setq elpy-rpc-python-command "python3")
 (setq elpy-rpc-backend "jedi")
+
+(setq python-shell-interpreter "ipython3"
+      python-shell-interpreter-args "--simple-prompt --pprint")
+
 
 (use-package jedi
   :ensure t
@@ -120,6 +126,9 @@
             :init (add-hook 'python-mode-hook 'anaconda-mode)
             (eval-after-load "company"
               '(add-to-list 'company-backends '(company-anaconda :with company-capf)))))
+
+
+
 
 ;; use flycheck not flymake with elpy
 (when (require 'flycheck nil t)
@@ -441,7 +450,8 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company-anaconda company-jedi jedi yaml-mode use-package unicode-fonts try soothe-theme py-autopep8 pretty-mode origami neotree multiple-cursors material-theme magit json-mode ivy-hydra format-sql flycheck elpy ein doom-modeline dired-icon counsel-projectile centaur-tabs bicycle better-defaults bash-completion badwolf-theme avy anaconda-mode all-the-icons-ivy all-the-icons-dired aggressive-indent))))
+    (company-anaconda company-jedi jedi yaml-mode use-package unicode-fonts try soothe-theme py-autopep8 pretty-mode origami neotree multiple-cursors material-theme magit json-mode ivy-hydra format-sql flycheck elpy ein doom-modeline dired-icon counsel-projectile centaur-tabs bicycle better-defaults bash-completion badwolf-theme avy anaconda-mode all-the-icons-ivy all-the-icons-dired aggressive-indent)))
+ '(python-shell-interpreter "ipython"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
