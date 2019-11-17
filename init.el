@@ -65,6 +65,12 @@
 (setq-default tab-always-indent 'complete)
 (require 'smartparens-config)
 
+(when (window-system)
+  (tool-bar-mode 0)               ;; Toolbars were only cool with XEmacs
+  (when (fboundp 'horizontal-scroll-bar-mode)
+    (horizontal-scroll-bar-mode -1))
+  (scroll-bar-mode -1))            ;; Scrollbars are waste screen estate
+
 
 ;; WINDOW MANAGEMENT
 ;; --------------------------------------------------
