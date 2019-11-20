@@ -146,6 +146,22 @@
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+;; use pytest for testing
+(use-package pytest
+  :commands (pytest-one
+             pytest-pdb-one
+             pytest-all
+             pytest-pdb-all
+             pytest-module
+             pytest-pdb-module)
+  :config (add-to-list 'pytest-project-root-files "setup.cfg")
+  (setq pytest-cmd-flags  "-v")
+  :bind (:map python-mode-map
+              ("C-c a" . pytest-all)
+              ("C-c m" . pytest-module)
+              ("C-c ." . pytest-one)
+              ("C-c d" . pytest-directory)))
+
 ;; NEOTREE
 ;; ------------------------------------------------------
 (global-set-key (kbd "C-d") 'neotree)
@@ -185,6 +201,7 @@
 ;; MISC STUFF
 ;; ------------------------------------------------------
 
+;; get pretty icons
 (use-package all-the-icons
   :config
   (use-package all-the-icons-dired
@@ -192,7 +209,7 @@
     (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
     )
   )
-
+;; make math symbols
 (use-package pretty-mode
   :ensure t
   :config
@@ -208,7 +225,7 @@
                            :types :arrows-tails  :arrows-tails-double
                            :logic :sets :equality :ordering
                            :arrows :arrows-twoheaded ))
-    )
+  )
 
 
 (add-hook
@@ -288,6 +305,8 @@
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   )
 
+
+;; better searching
 ;; it looks like counsel is a requirement for swiper
 (use-package counsel
   :ensure t
