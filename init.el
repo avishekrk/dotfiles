@@ -41,7 +41,8 @@
     anaconda-mode
     company
     color-identifiers-mode
-    smartparens))
+    smartparens
+    conda))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
@@ -49,13 +50,14 @@
       myPackages)
 
 
-
+;; FONTS
+;; -------------------------------------------------------------------
 (require 'unicode-fonts)
 (unicode-fonts-setup)
 
 
 ;; BASIC CUSTOMIZATION
-;; --------------------------------------------------
+;; -------------------------------------------------------------------
 (setq inhibit-startup-message t) ;; hide the startup message
 (load-theme 'badwolf t)
 (global-display-line-numbers-mode 1) ;; enable line numbers globally
@@ -107,8 +109,24 @@
 (setq elpy-rpc-python-command "python3")
 (setq elpy-rpc-backend "jedi")
 
+(when (executable-find "ipython")
+  (setq python-shell-interpreter "ipython"))
+
 (setq python-shell-interpreter "ipython3"
       python-shell-interpreter-args "--simple-prompt --pprint")
+
+(require 'conda)
+;; if you want interactive shell support, include:
+(conda-env-initialize-interactive-shells)
+;; if you want eshell support, include:
+(conda-env-initialize-eshell)
+;; if you want auto-activation (see below for details), include:
+(conda-env-autoactivate-mode t)
+
+(custom-set-variables
+'(conda-anaconda-home "/Users/akumar67/miniconda3/"))
+
+
 
 
 (use-package jedi
@@ -145,22 +163,6 @@
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; use pytest for testing
-(use-package pytest
-  :commands (pytest-one
-             pytest-pdb-one
-             pytest-all
-             pytest-pdb-all
-             pytest-module
-             pytest-pdb-module)
-  :config (add-to-list 'pytest-project-root-files "setup.cfg")
-  (setq pytest-cmd-flags  "-v")
-  :bind (:map python-mode-map
-              ("C-c a" . pytest-all)
-              ("C-c m" . pytest-module)
-              ("C-c ." . pytest-one)
-              ("C-c d" . pytest-directory)))
 
 ;; NEOTREE
 ;; ------------------------------------------------------
@@ -201,7 +203,6 @@
 ;; MISC STUFF
 ;; ------------------------------------------------------
 
-;; get pretty icons
 (use-package all-the-icons
   :config
   (use-package all-the-icons-dired
@@ -209,7 +210,7 @@
     (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
     )
   )
-;; make math symbols
+
 (use-package pretty-mode
   :ensure t
   :config
@@ -225,7 +226,7 @@
                            :types :arrows-tails  :arrows-tails-double
                            :logic :sets :equality :ordering
                            :arrows :arrows-twoheaded ))
-  )
+    )
 
 
 (add-hook
@@ -305,8 +306,6 @@
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   )
 
-
-;; better searching
 ;; it looks like counsel is a requirement for swiper
 (use-package counsel
   :ensure t
