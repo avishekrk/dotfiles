@@ -1,2 +1,2 @@
-.model "column"
+.mode column
 .headers on
