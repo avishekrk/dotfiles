@@ -4,6 +4,8 @@
 
 #emacs:just copy the init.el files to the right folder
 
+echo "Installing EMACS"
+
 PRELUDE_DIR="${HOME}/.emacs.d/personal/"
 EMACS_DIR="${HOME}/.emacs.d/"
 
@@ -20,3 +22,11 @@ else
     mkdir -vp ${EMACS_DIR}
     cp -v ./emacs/init.el ${EMACS_DIR}
 fi
+
+
+echo "Installing aliases"
+
+cp -v ./shell/.aliases ${HOME}
+touch ${HOME}/.bashrc
+echo "source .aliases" >> ${HOME}/.bashrc 
+source ~/.bashrc
