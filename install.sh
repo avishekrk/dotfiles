@@ -28,5 +28,8 @@ echo "Installing aliases"
 
 cp -v ./shell/.aliases ${HOME}
 touch ${HOME}/.bashrc
-echo "source .aliases" >> ${HOME}/.bashrc 
+echo "source .aliases" >> ${HOME}/.bashrc
 source ~/.bashrc
+
+echo "Installing sqliterc"
+cp -v ./sqlite/.sqliterc ${HOME}
