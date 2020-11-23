@@ -454,8 +454,11 @@
   ("M-q" . centaur-tabs-backward)
   ("M-a" . centaur-tabs-forward))
 
-(add-to-list 'same-window-buffer-names "*SQL*")
 
+
+;; SQL
+;; ---------------------------------------------------------
+(add-to-list 'same-window-buffer-names "*SQL*")
 (setq sql-postgres-login-params
       '((user :default "postgres")
         (database :default "postgres")
