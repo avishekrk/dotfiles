@@ -41,6 +41,7 @@
     anaconda-mode
     company
     color-identifiers-mode
+    use-package
     smartparens
     conda))
 
