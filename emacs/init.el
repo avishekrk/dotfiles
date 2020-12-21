@@ -43,7 +43,8 @@
     color-identifiers-mode
     use-package
     smartparens
-    conda))
+    conda
+    projectile))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
@@ -486,3 +487,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; projectile for managing projects
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
