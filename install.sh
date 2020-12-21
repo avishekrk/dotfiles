@@ -35,5 +35,5 @@ echo "Installing sqliterc"
 cp -v ./sqlite/.sqliterc ${HOME}
 
 echo "Installing gitconfig"
-cp -v ./git/.gitconfig
-cp -v ./git/.gitignore
+cp -v ./git/.gitconfig ${HOME}/
+cp -v ./git/.gitignore ${HOME}/
