@@ -51,7 +51,7 @@
     submodule = log
 
 [github]
-    user = nanounanue
+    user = akumar67
 
 [push]
     default = current
