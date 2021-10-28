@@ -1,0 +1,18 @@
+module.exports = {
+  config: {
+    modifierKeys: { altIsMeta: true },
+
+    updateChannel: "stable",
+
+    fontSize: 12,
+
+    fontFamily:
+      'Menlo, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace',
+
+    // default font weight: 'normal' or 'bold'
+    fontWeight: "normal",
+
+    webGLRenderer: false 
+}
+}
+
