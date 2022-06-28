@@ -44,7 +44,8 @@
     use-package
     smartparens
     conda
-    projectile))
+    projectile
+    centaur-tabs))
 
 (mapc #'(lambda (package)
           (unless (package-installed-p package)
@@ -62,12 +63,15 @@
 ;; -------------------------------------------------------------------
 (setq inhibit-startup-message t) ;; hide the startup message
 (load-theme 'badwolf t)
-(global-display-line-numbers-mode 1) ;; enable line numbers globally
+;;(global-display-line-numbers-mode 1) ;; enable line numbers globally
+(add-hook 'after-init-hook 'global-company-mode)
 (setq initial-scratch-message "")
 (setq-default indent-tabs-mode nil)
 (setq tab-width 4)
 (setq-default tab-always-indent 'complete)
 (require 'smartparens-config)
+
+
 
 (when (window-system)
   (tool-bar-mode 0)               ;; Toolbars were only cool with XEmacs
@@ -101,46 +105,54 @@
   :interpreter ("python" . python-mode)
 
   :init
-  (setq-default indent-tabs-mode nil)
-  :config
-  (setq python-indent-offset 4)
-  (add-hook 'python-mode-hook 'smartparens-mode)
-  (add-hook 'python-mode-hook 'color-identifiers-mode))
-
-(elpy-enable)
-(setq elpy-rpc-python-command "python3")
-(setq elpy-rpc-backend "jedi")
-
-(when (executable-find "ipython")
-  (setq python-shell-interpreter "ipython"))
-
-(setq python-shell-interpreter "ipython3"
-      python-shell-interpreter-args "--simple-prompt --pprint")
-
-(require 'conda)
-;; if you want interactive shell support, include:
-(conda-env-initialize-interactive-shells)
-;; if you want eshell support, include:
-(conda-env-initialize-eshell)
-;; if you want auto-activation (see below for details), include:
-(conda-env-autoactivate-mode t)
-
-(custom-set-variables
-'(conda-anaconda-home "/Users/akumar67/miniconda3/"))
-
-
+  (setq-default indent-tabs-mode nil
+                python-shell-interpreter-args "-m IPython --simple-prompt -i")  
+  :custom
+  (python-indent-offset 4)
+  (python-indent-guess-indent-offset nil)
+  (python-indent-guess-indent-offset-verbose nil)
+  :hook
+  (python-mode-hook . smartparens-mode)
+  )
 
 
 (use-package jedi
-  :ensure t
+  :disabled t
+                                        ;ensure t
   :init
   (add-to-list 'company-backends 'company-jedi)
   :config
   (use-package company-jedi
-    :ensure t
+    :disabled t
+                                        ;ensure t
     :init
     (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi)))
     (setq company-jedi-python-bin "python")))
+
+(setq jedi:complete-on-dot t) 
+(add-hook 'python-mode-hook 'jedi:setup)
+
+(use-package pytest
+  :commands (pytest-one
+             pytest-pdb-one
+             pytest-all
+             pytest-pdb-all
+             pytest-module
+             pytest-pdb-module)
+  :config (add-to-list 'pytest-project-root-files "setup.cfg")
+  (setq pytest-cmd-flags  "-v")
+  :bind (:map python-mode-map
+              ("C-c a" . pytest-all)
+              ("C-c m" . pytest-module)
+              ("C-c ." . pytest-one)
+              ("C-c d" . pytest-directory)))
+
+(use-package blacken
+  :after python
+  :demand t
+  :commands blacken-buffer
+  :bind (:map python-mode-map
+              ("C-c =" . blacken-buffer)))
 
 
 (use-package anaconda-mode
@@ -155,52 +167,15 @@
 
 
 
-
-;; use flycheck not flymake with elpy
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-
-;; enable autopep8 formatting on save
-(require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 ;; NEOTREE
 ;; ------------------------------------------------------
 (global-set-key (kbd "C-d") 'neotree)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-
+(setq neo-window-fixed-size nil)
 
 ;; RST
 ;; ------------------------------------------------------
 (require 'rst)
-
-;; LaTeX configuration
-;; ------------------------------------------------------
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-(setq TeX-PDF-mode t)
-
-(setq TeX-output-view-style
-    (quote
-     (("^pdf$" "." "evince -f %o")
-      ("^html?$" "." "iceweasel %o"))))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(setq use-package-always-ensure t)
-
 
 ;; MISC STUFF
 ;; ------------------------------------------------------
@@ -212,60 +187,6 @@
     (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
     )
   )
-
-(use-package pretty-mode
-  :ensure t
-  :config
-  (global-pretty-mode t)
-
-  (pretty-deactivate-groups
-   '(:equality :ordering :ordering-double :ordering-triple
-               :arrows :arrows-twoheaded :punctuation
-               :logic :sets))
-
-  (pretty-activate-groups
-   '(:sub-and-superscripts :greek :arithmetic-nary :parentheses
-                           :types :arrows-tails  :arrows-tails-double
-                           :logic :sets :equality :ordering
-                           :arrows :arrows-twoheaded ))
-    )
-
-
-(add-hook
- 'prog-mode-hook
- (lambda ()
-   (setq prettify-symbols-alist
-         '(;; Syntax
-           ("in" .       #x2208)
-           ("not in" .   #x2209)
-           ("not" .      #x2757)
-           ("return" .   #x27fc)
-           ("yield" .    #x27fb)
-           ("for" .      #x2200)
-           ("function" . ?λ)
-           ("<>" . ?≠)
-           ("!=" . ?≠)
-           ("exists" . ?Ǝ)
-           ("in" . ?∈)
-           ("sum" . ?Ʃ)
-           ("complex numbers" . ?ℂ)
-           ("integer numbers" . ?ℤ)
-           ("natural numbers" . ?ℕ)
-           ;; Base Types
-           ("int" .      #x2124)
-           ("float" .    #x211d)
-           ("str" .      #x1d54a)
-           ("True" .     #x1d54b)
-           ("False" .    #x1d53d)
-           ;; python
-           ("Dict" .     #x1d507)
-           ("List" .     #x2112)
-           ("Tuple" .    #x2a02)
-           ("Set" .      #x2126)
-           ("Iterable" . #x1d50a)
-           ("Any" .      #x2754)
-           ("Union" .    #x22c3)))))
-(global-prettify-symbols-mode t)
 
 (use-package avy
   :ensure t
@@ -410,7 +331,7 @@
 
 (require 'doom-modeline)
 (doom-modeline-mode 1)
-
+(setq doom-modeline-bar-width 16)
 
 (use-package doom-modeline
   :ensure t
@@ -456,39 +377,28 @@
   ("M-q" . centaur-tabs-backward)
   ("M-a" . centaur-tabs-forward))
 
+;;Custom Shortcuts
+(defun connect-remote ()
+  (interactive)
+  (dired "/user@192.168.1.5:/"))
 
 
-;; SQL
-;; ---------------------------------------------------------
-(add-to-list 'same-window-buffer-names "*SQL*")
-(setq sql-postgres-login-params
-      '((user :default "postgres")
-        (database :default "postgres")
-        (server :default "localhost")
-        (port :default 5432)))
+(eval-after-load "flyspell"
+  '(progn
+     (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+     (define-key flyspell-mouse-map [mouse-3] #'undefined)))
 
-(add-hook 'sql-interactive-mode-hook
-          (lambda ()
-            (setq sql-prompt-regexp "^[_[:alpha:]]*[=][#>] ")
-            (setq sql-prompt-cont-regexp "^[_[:alpha:]]*[-][#>] ")
-            (toggle-truncate-lines t)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (company-anaconda company-jedi jedi yaml-mode use-package unicode-fonts try soothe-theme py-autopep8 pretty-mode origami neotree multiple-cursors material-theme magit json-mode ivy-hydra format-sql flycheck elpy ein doom-modeline dired-icon counsel-projectile centaur-tabs bicycle better-defaults bash-completion badwolf-theme avy anaconda-mode all-the-icons-ivy all-the-icons-dired aggressive-indent)))
- '(python-shell-interpreter "ipython"))
+   '(company-jedi jedi blacken yaml-mode use-package unicode-fonts try soothe-theme smartparens py-autopep8 origami neotree material-theme markdown-mode magit json-mode ivy-hydra format-sql flycheck elpy ein doom-modeline dired-icon counsel-projectile conda company-anaconda color-identifiers-mode centaur-tabs better-defaults bash-completion badwolf-theme avy all-the-icons-ivy all-the-icons-dired aggressive-indent)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-;; projectile for managing projects
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
