@@ -1,0 +1,80 @@
+* EMACS UI
+
+* Startup
+
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t) ;; hide the startup message
+;;(global-display-line-numbers-mode 1) ;; enable line numbers globally
+(add-hook 'after-init-hook 'global-company-mode)
+(setq initial-scratch-message "")
+(setq-default indent-tabs-mode nil)
+(setq tab-width 4)
+(setq-default tab-always-indent 'complete)
+#+END_SRC
+
+
+* Visual Configurations
+
+#+BEGIN_SRC emacs-lisp
+(use-package badwolf-theme 
+  :ensure t
+  :load-path "themes"
+  :init
+  (setq badwolf-theme-kit t)
+  :config
+  (load-theme 'badwolf t)
+  )
+
+
+
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (blink-cursor-mode -1)
+
+  (global-hl-line-mode +1)
+  (line-number-mode +1)
+  (global-display-line-numbers-mode +1)
+  (column-number-mode t)
+  (size-indication-mode t)
+
+
+  (setq frame-title-format
+        '((:eval (if (buffer-file-name)
+         (abbreviate-file-name (buffer-file-name))
+         "%b"))))
+
+  (setq scroll-margin 0
+        scroll-conservatively 100000
+        scroll-preserve-screen-position 1)
+  (set-frame-font "Hack 12" nil t)
+
+
+  
+#+END_SRC
+
+** Modeline
+
+#+BEGIN_SRC emacs-lisp
+
+  (use-package doom-modeline
+    :ensure t
+    :hook (after-init . doom-modeline-mode))
+(doom-modeline-mode 1)
+(setq doom-modeline-bar-width 16)
+
+
+#+END_SRC
+
+
+** Window Management
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x <up>") 'windmove-up)
+(global-set-key (kbd "C-x <down>") 'windmove-down)
+(global-set-key (kbd "C-x <left>") 'windmove-left)
+(global-set-key (kbd "C-x <right>") 'windmove-right)
+#+END_SRC
+
+** Highlight the current line
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode)
+#+END_SRC

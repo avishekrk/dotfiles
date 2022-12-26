@@ -1,0 +1,36 @@
+* Org Mode
+
+**** Org ellipsis
+#+BEGIN_SRC emacs-lisp
+(setq org-ellipsis "⤵")
+#+END_SRC
+**** Org bullets
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets :ensure t)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(setq org-hide-leading-stars t)
+#+END_SRC
+**** Org syntax highlighting
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+**** Fancy Lambdas
+#+BEGIN_SRC emacs-lisp
+(global-prettify-symbols-mode t)
+#+END_SRC
+**** Highlight uncommited changes
+#+BEGIN_SRC emacs-lisp
+(use-package diff-hl
+  :config
+  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+  (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+#+END_SRC
+**** Hide all minor modes
+#+BEGIN_SRC emacs-lisp
+(use-package minions
+  :config
+  (setq minions-mode-line-lighter ""
+        minions-mode-line-delimiters '("" . ""))
+  (minions-mode 1))
+
+#+END_SRC
