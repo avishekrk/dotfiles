@@ -1,0 +1,155 @@
+* File Navigation
+** Neotree
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree 
+    :ensure t
+    :init
+    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+    (setq neo-window-fixed-size nil)
+    :config
+    (global-set-key (kbd "C-d") 'neotree)
+    )
+#+END_SRC
+
+** Find Files
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :ensure t
+  :commands avy-goto-word-1 avy-goto-char-1 avy-goto-line avy-goto-char-timer
+  :bind (("s-." . avy-goto-word-or-subword-1)
+         ("s-," . avy-goto-char)
+         ("C-l"     . avy-goto-word-1))
+  )
+
+;; Aggressive-fill
+(use-package aggressive-fill-paragraph
+  :ensure t
+  :disabled
+  :config
+  (afp-setup-recommended-hooks)
+  ;; to enable the minor mode in all places where it might be useful. Alternatively use
+  ;;(add-hook '[major-mode-hook] #'aggressive-fill-paragraph-mode)
+  )
+
+;; Aggressive-indent
+(use-package aggressive-indent
+  :ensure t
+  :config
+  ;; (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+  (add-hook 'ruby-mode-hook #'aggressive-indent-mode)
+  (add-hook 'css-mode-hook #'aggressive-indent-mode)
+  )
+
+
+;; Edición de múltiples líneas
+(use-package multiple-cursors
+  :diminish multiple-cursors-mode
+  :defer t
+  :init
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  )
+
+;; it looks like counsel is a requirement for swiper
+(use-package counsel
+  :ensure t
+  )
+
+(use-package swiper
+  :init (ivy-mode 1)
+  :ensure try
+  :bind (
+         ("C-s" . swiper)
+         ("C-r" . swiper)
+         ("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-c C-r" . ivy-resume)
+         ("<f6>" . ivy-resume)
+         ("C-c h m" . woman)
+         ("C-x b" . ivy-switch-buffer)
+         ("C-c u" . swiper-all)
+         ("<f1> f" . counsel-describe-function)
+         ("<f1> v" . counsel-describe-variable)
+         ("<f1> l" . counsel-load-library)
+         ("<f2> i" . counsel-info-lookup-symbol)
+         ("<f2> u" . counsel-unicode-char)
+         ("C-c g" . counsel-git)
+         ("C-c j" . counsel-git-grep)
+         ("C-c k" . counsel-ag)
+         ("C-x l" . counsel-locate)
+         ("C-S-o" . counsel-rhythmbox)
+         )
+  :config
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "%d/%d ")
+  (setq projectile-completion-system 'ivy)                   ;; Habilitamos ivy en projectile
+  (setq magit-completing-read-function 'ivy-completing-read) ;; Habilitamos ivy en magit
+
+  ;; Tomado de scimax
+  (ivy-set-actions
+   t
+   '(("i" (lambda (x) (with-ivy-window
+                   (insert x))) "insert candidate")
+     (" " (lambda (x) (ivy-resume)) "resume")
+     ("?" (lambda (x)
+            (interactive)
+            (describe-keymap ivy-minibuffer-map)) "Describe keys")))
+
+  ;; ** Acciones para counsel-find-file
+  ;; Tomado de scimax
+  (ivy-add-actions
+   'counsel-find-file
+   '(("a" (lambda (x)
+            (unless (memq major-mode '(mu4e-compose-mode message-mode))
+              (compose-mail))
+            (mml-attach-file x)) "Attach to email")
+     ("c" (lambda (x) (kill-new (f-relative x))) "Copy relative path")
+     ("4" (lambda (x) (find-file-other-window x)) "Open in new window")
+     ("5" (lambda (x) (find-file-other-frame x)) "Open in new frame")
+     ("C" (lambda (x) (kill-new x)) "Copy absolute path")
+     ("d" (lambda (x) (dired x)) "Open in dired")
+     ("D" (lambda (x) (delete-file x)) "Delete file")
+     ("e" (lambda (x) (shell-command (format "open %s" x)))
+      "Open in external program")
+     ("f" (lambda (x)
+            "Open X in another frame."
+            (find-file-other-frame x))
+      "Open in new frame")
+     ("p" (lambda (path)
+            (with-ivy-window
+              (insert (f-relative path))))
+      "Insert relative path")
+     ("P" (lambda (path)
+            (with-ivy-window
+              (insert path)))
+      "Insert absolute path")
+     ("l" (lambda (path)
+            "Insert org-link with relative path"
+            (with-ivy-window
+              (insert (format "[[./%s]]" (f-relative path)))))
+      "Insert org-link (rel. path)")
+     ("L" (lambda (path)
+            "Insert org-link with absolute path"
+            (with-ivy-window
+              (insert (format "[[%s]]" path))))
+      "Insert org-link (abs. path)")
+     ("r" (lambda (path)
+            (rename-file path (read-string "New name: ")))
+      "Rename")))
+  )
+
+(use-package ivy-hydra
+  :ensure t
+  )
+
+(use-package counsel-projectile
+  :ensure t
+  :after counsel
+  :config
+  ;;  (counsel-projectile-on)
+  )
+#+END_SRC

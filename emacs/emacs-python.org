@@ -1,0 +1,71 @@
+* PYTHON
+#+BEGIN_SRC emacs-lisp
+  (use-package python
+    :mode ("\\.py\\'" . python-mode)
+    ("\\.wsgi$" . python-mode)
+    :interpreter ("python" . python-mode)
+
+    :init
+    (setq-default indent-tabs-mode nil
+                  python-shell-interpreter-args "-m IPython --simple-prompt -i")  
+    :custom
+    (python-indent-offset 4)
+    (python-indent-guess-indent-offset nil)
+    (python-indent-guess-indent-offset-verbose nil)
+    :hook
+    (python-mode-hook . smartparens-mode)
+    )
+
+
+  ;; (use-package jedi
+  ;;   :disabled t
+  ;;                                         ;ensure t
+  ;;   :init
+  ;;   (add-to-list 'company-backends 'company-jedi)
+  ;;   :config
+  ;;   (use-package company-jedi
+  ;;     :disabled t
+  ;;                                         ;ensure t
+  ;;     :init
+  ;;     (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi)))
+  ;;     (setq company-jedi-python-bin "python")))
+
+  ;; (setq jedi:complete-on-dot t) 
+  ;; (add-hook 'python-mode-hook 'jedi:setup)
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+  
+  (use-package pytest
+    :commands (pytest-one
+               pytest-pdb-one
+               pytest-all
+               pytest-pdb-all
+               pytest-module
+               pytest-pdb-module)
+    :config (add-to-list 'pytest-project-root-files "setup.cfg")
+    (setq pytest-cmd-flags  "-v")
+    :bind (:map python-mode-map
+                ("C-c a" . pytest-all)
+                ("C-c m" . pytest-module)
+                ("C-c ." . pytest-one)
+                ("C-c d" . pytest-directory)))
+
+  (use-package blacken
+    :after python
+    :demand t
+    :commands blacken-buffer
+    :bind (:map python-mode-map
+                ("C-c =" . blacken-buffer)))
+
+
+  (use-package anaconda-mode
+    :ensure t
+    :init (add-hook 'python-mode-hook 'anaconda-mode)
+    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+    :config (use-package company-anaconda
+              :ensure t
+              :init (add-hook 'python-mode-hook 'anaconda-mode)
+              (eval-after-load "company"
+                '(add-to-list 'company-backends '(company-anaconda :with company-capf)))))
+#+END_SRC
