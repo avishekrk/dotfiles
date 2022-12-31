@@ -17,21 +17,6 @@
     )
 
 
-  ;; (use-package jedi
-  ;;   :disabled t
-  ;;                                         ;ensure t
-  ;;   :init
-  ;;   (add-to-list 'company-backends 'company-jedi)
-  ;;   :config
-  ;;   (use-package company-jedi
-  ;;     :disabled t
-  ;;                                         ;ensure t
-  ;;     :init
-  ;;     (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi)))
-  ;;     (setq company-jedi-python-bin "python")))
-
-  ;; (setq jedi:complete-on-dot t) 
-  ;; (add-hook 'python-mode-hook 'jedi:setup)
 
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
@@ -47,6 +32,7 @@
     (setq pytest-cmd-flags  "-v")
     :bind (:map python-mode-map
                 ("C-c a" . pytest-all)
+
                 ("C-c m" . pytest-module)
                 ("C-c ." . pytest-one)
                 ("C-c d" . pytest-directory)))
