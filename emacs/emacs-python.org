@@ -1,4 +1,5 @@
 * PYTHON
+** Python Basics
 #+BEGIN_SRC emacs-lisp
   (use-package python
     :mode ("\\.py\\'" . python-mode)
@@ -15,43 +16,51 @@
     :hook
     (python-mode-hook . smartparens-mode)
     )
+#+END_SRC
 
+** Jedi Mode
+Jedi mode is for autocompletion=
 
-
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)
   
-  (use-package pytest
-    :commands (pytest-one
-               pytest-pdb-one
-               pytest-all
-               pytest-pdb-all
-               pytest-module
-               pytest-pdb-module)
-    :config (add-to-list 'pytest-project-root-files "setup.cfg")
-    (setq pytest-cmd-flags  "-v")
-    :bind (:map python-mode-map
-                ("C-c a" . pytest-all)
+    (use-package pytest
+      :commands (pytest-one
+                 pytest-pdb-one
+                 pytest-all
+                 pytest-pdb-all
+                 pytest-module
+                 pytest-pdb-module)
+      :config (add-to-list 'pytest-project-root-files "setup.cfg")
+      (setq pytest-cmd-flags  "-v")
+      :bind (:map python-mode-map
+                  ("C-c a" . pytest-all)
 
-                ("C-c m" . pytest-module)
-                ("C-c ." . pytest-one)
-                ("C-c d" . pytest-directory)))
+                  ("C-c m" . pytest-module)
+                  ("C-c ." . pytest-one)
+                  ("C-c d" . pytest-directory)))
+#+END_SRC 
 
-  (use-package blacken
-    :after python
-    :demand t
-    :commands blacken-buffer
-    :bind (:map python-mode-map
-                ("C-c =" . blacken-buffer)))
+** Blacken (Code Formatter)
+#+BEGIN_SRC emacs-lisp
+    (use-package blacken
+      :after python
+      :demand t
+      :commands blacken-buffer
+      :bind (:map python-mode-map
+                  ("C-c =" . blacken-buffer)))
+#+END_SRC
 
-
-  (use-package anaconda-mode
-    :ensure t
-    :init (add-hook 'python-mode-hook 'anaconda-mode)
-    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-    :config (use-package company-anaconda
-              :ensure t
-              :init (add-hook 'python-mode-hook 'anaconda-mode)
-              (eval-after-load "company"
-                '(add-to-list 'company-backends '(company-anaconda :with company-capf)))))
+** Anaconda Mode (Code Navigation)
+#+BEGIN_SRC emacs-lisp
+    (use-package anaconda-mode
+      :ensure t
+      :init (add-hook 'python-mode-hook 'anaconda-mode)
+      (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+      :config (use-package company-anaconda
+                :ensure t
+                :init (add-hook 'python-mode-hook 'anaconda-mode)
+                (eval-after-load "company"
+                  '(add-to-list 'company-backends '(company-anaconda :with company-capf)))))
 #+END_SRC
