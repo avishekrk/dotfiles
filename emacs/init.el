@@ -15,7 +15,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(org-babel-load-file "~/.emacs.d/config.org")
+(org-babel-load-file "~/.emacs.d/emacs-config.org")
 (org-babel-load-file "~/.emacs.d/emacs-python.org")
 (org-babel-load-file "~/.emacs.d/emacs-ui.org")
 (org-babel-load-file "~/.emacs.d/emacs-files.org")
