@@ -1,0 +1,9 @@
+#EMACS
+*~
+
+#FILE LOCKS
+#*#
+
+#JUPYTER
+# Jupyter Notebook
+.ipynb_checkpoints
