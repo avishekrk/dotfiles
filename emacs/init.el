@@ -20,6 +20,7 @@
 (org-babel-load-file "~/.emacs.d/emacs-ui.org")
 (org-babel-load-file "~/.emacs.d/emacs-files.org")
 (org-babel-load-file "~/.emacs.d/emacs-org.org")
+(org-babel-load-file "~/.emacs.d/emacs-sql.org")
 
 
 (custom-set-variables
