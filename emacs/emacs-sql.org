@@ -1,0 +1,8 @@
+* SQL
+** SQL Formatter
+In this case use pg_format
+#+BEGIN_SRC emacs-lisp
+  (use-package sqlformat)
+  (setq sqlformat-command 'pgformatter)
+  (setq sqlformat-args '("-s2" "-g"))
+#+END_SRC
