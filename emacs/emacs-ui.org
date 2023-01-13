@@ -55,7 +55,7 @@
 ** Golden Ratio (Opens new windows based on golden ratio)
 https://github.com/roman/golden-ratio.el
 #+BEGIN_SRC emacs-lisp
-(use-package golden-raio)
+(use-package golden-ratio)
 (golden-ratio-mode 1)
 #+END_SRC
 
