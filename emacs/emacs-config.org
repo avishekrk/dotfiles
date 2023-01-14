@@ -44,3 +44,8 @@ Always compile packages, and use the newest version available.
   (setq mouse-sel-mode t)
   (defun track-mouse (e))
 #+END_SRC
+** Automatically Revert to buffers for changed files
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode 1)
+#+END_SRC
+
