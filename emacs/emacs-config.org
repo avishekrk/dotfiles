@@ -29,23 +29,11 @@ Always compile packages, and use the newest version available.
 (use-package company)
 (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
-** Mouse Events (Scrolling for iTerm)
-#+BEGIN_SRC emacs-lisp
-  ;; mouse integration
-  (use-package mouse)
-  (require 'mouse) ;; needed for iterm2 compatibility
-  (xterm-mouse-mode t)
-  (global-set-key [mouse-4] '(lambda ()
-                             (interactive)
-                             (scroll-down 1)))
-  (global-set-key [mouse-5] '(lambda ()
-                             (interactive)
-                             (scroll-up 1)))
-  (setq mouse-sel-mode t)
-  (defun track-mouse (e))
+
 #+END_SRC
 ** Automatically Revert to buffers for changed files
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
 #+END_SRC
 
