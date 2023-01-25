@@ -22,8 +22,13 @@
 Jedi mode is for autocompletion=
 
 #+BEGIN_SRC emacs-lisp
+  (use-package jedi)
   (add-hook 'python-mode-hook 'jedi:setup)
   (setq jedi:complete-on-dot t)
+#+END_SRC 
+
+** pytest
+#+BEGIN_SRC emacs-lisp
   
     (use-package pytest
       :commands (pytest-one
