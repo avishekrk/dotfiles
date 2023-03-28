@@ -1,0 +1,33 @@
+#+TITLE: GNU/Emacs Config
+#+AUTHOR: Avishek Kumar
+
+
+* Configure package.el to include MELPA
+
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(package-initialize)
+#+END_SRC
+
+* Make sure use-package is installed
+#+BEGIN_SRC emacs-lisp
+(when (not (package-installed-p 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+#+END_SRC
+
+* Load everything
+
+#+BEGIN_SRC emacs-lisp
+(org-babel-load-file "~/.emacs.d/emacs-config.org")
+(org-babel-load-file "~/.emacs.d/emacs-python.org")
+(org-babel-load-file "~/.emacs.d/emacs-ui.org")
+(org-babel-load-file "~/.emacs.d/emacs-files.org")
+(org-babel-load-file "~/.emacs.d/emacs-org.org")
+(org-babel-load-file "~/.emacs.d/emacs-sql.org")
+#+END_SRC
+
